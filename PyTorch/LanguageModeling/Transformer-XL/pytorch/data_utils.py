@@ -287,6 +287,7 @@ class Corpus(object):
             if self.dataset in ['ptb', 'wt2', 'wt103', 'enwik8', 'text8']:
                 data_iter = LMOrderedIterator(data, *args, **kwargs)
             elif self.dataset == 'lm1b':
+                kwargs.pop('mem_len') #WARNING: there is no mem_len kw arg in LMShuffledIterator
                 data_iter = LMShuffledIterator(data, *args, **kwargs)
 
         return data_iter

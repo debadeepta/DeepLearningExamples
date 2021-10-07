@@ -25,7 +25,7 @@ if [[ $1 == 'train' ]]; then
         --mem_len 32 \
         --eval_tgt_len 32 \
         --batch_size 512 \
-        --multi_gpu \
+        --multi_gpu ddp \
         --gpu0_bsz 0 \
         ${@:2}
 elif [[ $1 == 'eval' ]]; then
