@@ -1,10 +1,10 @@
 #!/bin/bash
-
+export NCCL_P2P_DISABLE=1
 export OMP_NUM_THREADS=1
 
 if [[ $1 == 'train' ]]; then
     echo 'Run training...'
-    python train.py \
+    python -m torch.distributed.launch --nproc_per_node=4 train.py \
         --cuda \
         --data ../data/one-billion-words/ \
         --dataset lm1b \
