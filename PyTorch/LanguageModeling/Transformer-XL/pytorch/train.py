@@ -513,14 +513,16 @@ def train(tr_iter, va_iter, model, para_model, model_config, optimizer,
     log_start_time = time.time()
 
     mems = [None for _ in range(args.batch_chunk)]
-    # if args.varlen:
-    #     train_iter = tr_iter.get_varlen_iter(start=last_iter)
-    # else:
-    #     train_iter = tr_iter.get_fixlen_iter(start=last_iter)
-    train_iter = tr_iter
+    # Changes to make train_iter for lm1b to be properly caught
+    if args.dataset != 'lm1b':
+        if args.varlen:
+            train_iter = tr_iter.get_varlen_iter(start=last_iter)
+        else:
+            train_iter = tr_iter.get_fixlen_iter(start=last_iter)
+    else:
+        train_iter = tr_iter
 
-    #for batch, (data, target, seq_len, _) in enumerate(train_iter, start=last_batch+1):
-    for batch, (data, target, seq_len) in enumerate(train_iter, start=last_batch+1):
+    for batch, (data, target, seq_len, _) in enumerate(train_iter, start=last_batch+1):
         log_step += 1
         target_tokens += target.numel()
 

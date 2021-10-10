@@ -181,8 +181,12 @@ class LMShuffledIterator(object):
             data = data.to(self.device)
             target = target.to(self.device)
 
-            yield data, target, self.bptt
-
+            # making it compatible with LMOrdered iterator
+            # by passing a dummy variable (for 'warm')
+            dummy = False
+    
+            yield data, target, self.bptt, dummy
+                
             n_retain = min(data.size(0), self.ext_len)
             if n_retain > 0:
                 data[:n_retain] = data[-n_retain:]
@@ -200,6 +204,9 @@ class LMMultiFileIterator(LMShuffledIterator):
     def __init__(self, paths, vocab, bsz, bptt, device='cpu', ext_len=None,
                  shuffle=False):
 
+        # DEY: why don't call super().__init__() to avoid 
+        # code duplication? Because they don't have the 
+        # 'data' variable that LMShuffledIterator needs
         self.paths = paths
         self.vocab = vocab
 
@@ -212,6 +219,7 @@ class LMMultiFileIterator(LMShuffledIterator):
 
         # For compatibility with LMOrderedIterator
         self.n_batch = -1
+        self.last_iter = None
 
     def get_sent_stream(self, path):
         sents = self.vocab.encode_file(path, add_double_eos=True)
@@ -228,8 +236,9 @@ class LMMultiFileIterator(LMShuffledIterator):
         for path in self.paths:
             # sent_stream is an iterator
             sent_stream = self.get_sent_stream(path)
-            for batch in self.stream_iterator(sent_stream):
+            for idx, batch in enumerate(self.stream_iterator(sent_stream)):
                 yield batch
+                self.last_iter = idx
 
 
 class Corpus(object):
