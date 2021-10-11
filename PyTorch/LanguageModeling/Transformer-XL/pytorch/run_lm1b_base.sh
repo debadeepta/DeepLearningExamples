@@ -1,5 +1,5 @@
 #!/bin/bash
-export NCCL_P2P_DISABLE=1
+export NCCL_P2P_LEVEL=NVL
 export OMP_NUM_THREADS=1
 
 if [[ $1 == 'train' ]]; then
@@ -19,7 +19,7 @@ if [[ $1 == 'train' ]]; then
         --dropatt 0.0 \
         --optim adam \
         --warmup_step 20000 \
-        --max_step 500000 \
+        --max_step 50000 \
         --lr 0.00025 \
         --tgt_len 32 \
         --mem_len 32 \

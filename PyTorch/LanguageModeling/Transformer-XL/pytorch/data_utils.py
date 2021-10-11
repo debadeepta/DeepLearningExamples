@@ -183,7 +183,8 @@ class LMShuffledIterator(object):
 
             # making it compatible with LMOrdered iterator
             # by passing a dummy variable (for 'warm')
-            dummy = False
+            # NOTE: We need to understand 'warm' in detail.
+            dummy = True
     
             yield data, target, self.bptt, dummy
                 
