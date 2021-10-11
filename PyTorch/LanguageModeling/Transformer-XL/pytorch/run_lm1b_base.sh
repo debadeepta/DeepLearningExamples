@@ -27,6 +27,7 @@ if [[ $1 == 'train' ]]; then
         --batch_size 224 \
         --multi_gpu ddp \
         --gpu0_bsz 32 \
+        --fp16 \
         ${@:2}
 elif [[ $1 == 'eval' ]]; then
     echo 'Run evaluation...'
